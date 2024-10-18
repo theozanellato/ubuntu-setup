@@ -1,0 +1,17 @@
+#!/usr/bin/env ansible-playbook
+- hosts: localhost 
+  vars:
+    source_dir: "{{ ansible_env.PWD }}/files/dotfiles/"  # Replace with your source directory
+    dest_dir: "~/"  # Replace with your destination directory
+
+  tasks:
+    - import_tasks: tasks/core.yml
+    - import_tasks: tasks/zsh.yml
+    - import_tasks: tasks/tmux.yml
+#    - import_tasks: tasks/homebrew.yml
+    - import_tasks: tasks/neovim.yml
+#    - import_tasks: tasks/node.yml
+    # - import_tasks: tasks/python.yml
+#    - import_tasks: tasks/personal-projects.yml
+    - import_tasks: tasks/dotfiles.yml
+#    - import_tasks: tasks/cron.yml

@@ -1,0 +1,29 @@
+  - name: Include main vars
+    ansible.builtin.include_vars:
+      file: vars.yml
+
+  - name: "Install core utils"
+    # become: true
+    ansible.builtin.command: sudo apt-get install -y git coreutils fzf tree htop zoxide eza
+    # apt:
+    #   name: "{{ packages }}"
+    #   state: present
+    # vars:
+    #   packages:
+    #   - fzf
+    #   - tree
+    #   - htop
+
+  - name: user.name for git config
+    become_user: "{{ username }}"
+    community.general.git_config:
+      name: user.name
+      scope: global
+      value: "{{ username }}"
+
+  - name: user.email for git config
+    become_user: "{{ username }}"
+    community.general.git_config:
+      name: user.email
+      scope: global
+      value: "{{ email }}"

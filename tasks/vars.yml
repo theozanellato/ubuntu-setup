@@ -1,0 +1,7 @@
+username: "theozanellato"
+email: "theo.zanellato@gmail.com"
+ssh_key_filename: "id_rsa"
+config: "{{ lookup('ansible.builtin.env', 'XDG_CONFIG') }}"
+home: "{{ lookup('ansible.builtin.env', 'HOME') }}"
+personal: "{{ home }}/personal"
+dev: "{{ personal }}/dev"

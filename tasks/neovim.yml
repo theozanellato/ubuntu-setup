@@ -1,0 +1,33 @@
+- name: Include main vars
+  ansible.builtin.include_vars:
+    file: vars.yml
+
+- name: "Install neovim deps"
+  become: true
+  apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - cmake
+    - gettext
+    - lua5.1
+    - liblua5.1-0-dev
+    - luarocks
+    - ripgrep
+
+- name: Download Neovim latest release
+  get_url:
+    url: "https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
+    dest: "/tmp/nvim-linux64.tar.gz"
+
+- name: Remove existing Neovim directory
+  file:
+    path: "/opt/nvim"
+    state: absent
+#    become: yes  # Required to run with sudo privileges
+- name: Extract Neovim to /opt using command
+  command: "tar -C /opt -xzf /tmp/nvim-linux64.tar.gz"
+  become: yes
+  args:
+    creates: "/opt/nvim"

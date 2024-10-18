@@ -1,0 +1,64 @@
+  - name: Include main vars
+    ansible.builtin.include_vars:
+      file: vars.yml
+
+  - name: Ensure Zsh is installed
+    apt:
+      name: zsh
+      state: present
+      update_cache: yes
+    become: true
+
+  - name: Download Oh My Zsh installation script
+    get_url:
+      url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+      dest: /tmp/install_ohmyzsh.sh
+
+  - name: Run Oh My Zsh installation script
+    command: sh /tmp/install_ohmyzsh.sh --unattended
+    register: ohmyzsh_result
+    failed_when: "'FAILED' in ohmyzsh_result.stderr"
+
+  - name: Ensure zsh is the default shell
+    user:
+      name: "{{ username }}"
+      shell: "/usr/bin/zsh"
+    become: true
+
+  # This is another one of the items i cannot seem to figure out.  I am using root but i am not getting this to change forever...
+  - name: sets default shell to zsh
+    become: true
+    ansible.builtin.command: chsh -s /usr/bin/zsh
+
+  - name: Install zsh-autosuggestions
+    ansible.builtin.git:
+      repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+      dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
+
+  - name: Install zsh-syntax-highlighting
+    ansible.builtin.git:
+      repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
+      dest: "~/.oh-my-zsh/plugins/zsh-syntax-highlighting"
+
+  - name: Install zsh-fzf-history-search
+    ansible.builtin.git:
+      repo: 'https://github.com/joshskidmore/zsh-fzf-history-search.git'
+      dest: "~/.oh-my-zsh/plugins/zsh-fzf-history-search"
+
+  - name: Delete zshrc
+    file:
+      path: ~/.zshrc
+      state: absent
+  # - name: Install zsh plugins
+    # ansible.builtin.command: sudo apt-get install -y zsh-autosuggestions zsh-fzf-history-search zsh-syntax-highlighting  
+      #apt:
+      #name: zsh-autosuggestions
+      #state: present
+      #update_cache: yes
+
+  # - name: Install zsh-syntax-highlighting
+    # ansible.builtin.command: sudo apt-get install -y zsh-syntax-highlighting
+      #apt:
+      #name: zsh-syntax-highlighting
+      #state: present
+      #update_cache: yes

@@ -1,0 +1,53 @@
+- name: dotfiles dirs
+  file:
+    path: '~/.{{ item }}'
+    state: directory
+  loop:
+  - config
+  - config/nvim
+  - config/nvim/lua/config
+  - config/nvim/lua/plugins
+#  - config/pip
+#  - config/zed
+- name: Create symlinks with parallel folder structure
+  find:
+    paths: "{{ source_dir }}"
+    hidden: yes
+    recurse: yes
+    file_type: file
+  register: found_files
+
+- name: Create symlinks and directories in one go
+  file:
+    src: "{{ item.path }}"
+    dest: "{{ dest_dir }}/{{ item.path | regex_replace('^' + source_dir, '') }}"
+    state: link
+  loop: "{{ found_files.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+#- name: dotfiles links
+#  file:
+#    src: '{{ ansible_env.PWD }}/files/dotfiles/'
+#    dest: '~/'
+#    path: '~/.{{ item }}'
+#    state: link
+#    recurse: yes
+#  loop:
+#  - ansible.cfg
+#  - config/karabiner
+#  - config/ripgreprc
+#  - config/starship.toml
+#  - config/git/attributes
+#  - config/git/config
+#  - config/git/ignore
+#  - config/pip/pip.conf
+#  - config/zed/keymap.json
+#  - config/zed/settings.json
+#  - digrc
+#  - inputrc
+#  - ipython/profile_default/startup/00-imports.py
+#  - mrconfig
+#  - ssh/config
+#  - zsh_profile
+#  - zshrc
+#  - config/nvim/init.lua
