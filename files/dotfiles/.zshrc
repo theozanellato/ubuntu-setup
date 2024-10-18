@@ -15,7 +15,7 @@ export PATH="$PATH:/opt/nvim-linux64/bin"
 # bindkey '^R' history-incremental-search-backward
 eval "$(starship init zsh)"
 
-alias ls='eza --all --all --git --icons --color=always --group-directories-first'
+alias ls='eza --git --icons --color=always --group-directories-first'
 
 eval "$(zoxide init zsh)"
 alias cd='z'

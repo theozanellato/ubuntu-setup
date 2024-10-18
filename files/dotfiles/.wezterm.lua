@@ -16,7 +16,7 @@ config = {
 	background = {
 		{
 			source = {
-				File = "$HOME/m51.jpg",
+				File = os.getenv("HOME") .. "/m51.jpg",
 				--File = "C:/Users/Theo/m51.jpg",
 			},
 			hsb = {
