@@ -14,4 +14,4 @@
     # - import_tasks: tasks/python.yml
 #    - import_tasks: tasks/personal-projects.yml
     - import_tasks: tasks/dotfiles.yml
-#    - import_tasks: tasks/cron.yml
+    - import_tasks: tasks/hachiko.yml
