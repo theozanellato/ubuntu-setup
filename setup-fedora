@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# Update system
+sudo dnf update -y
+
+# Install Ansible and dependencies
+sudo dnf install -y ansible python3 python3-pexpect curl gnupg2 wget
+
+# Install Starship prompt
+curl -sS https://starship.rs/install.sh | sh
+
+# Set up Eza repository manually (Fedora alternative)
+#sudo dnf copr enable atim/eza -y
+#sudo dnf install -y eza
+
+# Install Lazygit
+LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+curl -Lo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+tar -xzf /tmp/lazygit.tar.gz lazygit
+sudo install lazygit /usr/local/bin
+rm lazygit
+
+# Run Ansible playbook
+ansible-playbook playbook-fedora.yml --ask-become-pass

@@ -1,4 +1,4 @@
-username: "theozanellato"
+username: "theo"
 email: "theo.zanellato@gmail.com"
 ssh_key_filename: "id_rsa"
 config: "{{ lookup('ansible.builtin.env', 'XDG_CONFIG') }}"

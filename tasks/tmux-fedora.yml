@@ -1,0 +1,10 @@
+- name: Include main vars
+  ansible.builtin.include_vars:
+    file: vars.yml
+
+- name: Install tmux on Fedora
+  become: true
+  ansible.builtin.dnf:
+    name: tmux
+    state: present
+    update_cache: yes

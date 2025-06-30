@@ -1,0 +1,34 @@
+- name: Include main vars
+  ansible.builtin.include_vars:
+    file: vars.yml
+
+#- name: Enable Eza Copr repo
+#  ansible.builtin.command: dnf copr enable -y atim/eza
+#  become: true
+
+- name: Install core utils on Fedora
+  become: true
+  ansible.builtin.dnf:
+    name:
+      - git
+      - coreutils
+      - fzf
+      - tree
+      - htop
+      - zoxide
+#      - eza
+    state: present
+
+- name: Set user.name for Git config
+  become_user: "{{ username }}"
+  community.general.git_config:
+    name: user.name
+    scope: global
+    value: "{{ username }}"
+
+- name: Set user.email for Git config
+  become_user: "{{ username }}"
+  community.general.git_config:
+    name: user.email
+    scope: global
+    value: "{{ email }}"

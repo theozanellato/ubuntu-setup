@@ -1,0 +1,75 @@
+- name: Include main vars
+  ansible.builtin.include_vars:
+    file: vars.yml
+
+- name: Ensure Zsh is installed (Fedora)
+  become: true
+  ansible.builtin.dnf:
+    name: zsh
+    state: present
+    update_cache: yes
+
+- name: Download Oh My Zsh installation script
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+    dest: /tmp/install_ohmyzsh.sh
+    mode: '0755'
+
+- name: Run Oh My Zsh installation script
+  ansible.builtin.command: sh /tmp/install_ohmyzsh.sh --unattended
+  become_user: "{{ username }}"
+  register: ohmyzsh_result
+  failed_when: "'FAILED' in ohmyzsh_result.stderr"
+
+- name: Ensure Zsh is the default shell for the user
+  become: true
+  ansible.builtin.user:
+    name: "{{ username }}"
+    shell: "/usr/bin/zsh"
+
+- name: Ensure Zsh is the default shell for the current user (if running as root manually)
+  become: true
+  ansible.builtin.command: chsh -s /usr/bin/zsh "{{ username }}"
+
+- name: Ensure Oh My Zsh directory exists
+  become: true
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.oh-my-zsh"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: '0755'
+
+- name: Ensure plugins directory exists
+  become: true
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.oh-my-zsh/plugins"
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    mode: '0755'
+
+- name: Install zsh-autosuggestions
+  become: true
+  become_user: "{{ username }}"
+  ansible.builtin.git:
+    repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+    dest: "/home/{{ username }}/.oh-my-zsh/plugins/zsh-autosuggestions"
+
+- name: Install zsh-syntax-highlighting
+  become_user: "{{ username }}"
+  ansible.builtin.git:
+    repo: 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
+    dest: "/home/{{ username }}/.oh-my-zsh/plugins/zsh-syntax-highlighting"
+
+- name: Install zsh-fzf-history-search
+  become_user: "{{ username }}"
+  ansible.builtin.git:
+    repo: 'https://github.com/joshskidmore/zsh-fzf-history-search.git'
+    dest: "/home/{{ username }}/.oh-my-zsh/plugins/zsh-fzf-history-search"
+
+- name: Delete existing .zshrc
+  become_user: "{{ username }}"
+  ansible.builtin.file:
+    path: "/home/{{ username }}/.zshrc"
+    state: absent

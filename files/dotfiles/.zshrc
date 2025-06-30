@@ -19,3 +19,6 @@ alias ls='eza --git --icons --color=always --group-directories-first'
 
 eval "$(zoxide init zsh)"
 alias cd='z'
+
+export CC=gcc
+export CXX=g++
